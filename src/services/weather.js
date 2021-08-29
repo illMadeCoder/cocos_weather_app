@@ -1,7 +1,7 @@
 import axios from 'axios'
-require('dotenv').config()
 
-const baseUrl =  `http://api.weatherstack.com/current?access_key=${process.env.WEATHER_ACCESS_KEY}`
+const accessKey = 'bd7f4784ba3f00f56066371e4f77b9c4'
+const baseUrl =  `http://api.weatherstack.com/current?access_key=${accessKey}`
 
 function get() {
     return axios.get(baseUrl + '&query=Syracuse').then(req => req.data.current)
