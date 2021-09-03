@@ -41,29 +41,33 @@ const TimeDisplay = ({time}) =>
   <div>
     <Card
       style={{
-        width:'30vw',
-        height:'30vw',
-        marginRight:'75%',
-        marginLeft:'auto',
+        width:'15em',
+        height:'7em',
         borderRadius: '2em',
-        maxHeight: '15em',
-        maxWidth: '15em',
-        minHeight:'10em',
-        minWidth:'10em',
         border:'solid .9em lightcoral',
-        marginBottom:'auto'
+        backgroundColor:'pink'
       }}>    
-      5:00 PM
+
+    <Card.Title 
+    style={{
+        color: 'white',
+        textShadow: '0 0 5px black, 0 0 5px black',
+        fontSize: '4em',
+        fontFamily:'Patrick Hand',
+        fontWeight: 'bold',
+        marginLeft:'auto',
+        marginRight:'auto'
+    }}>
+      {time}
+      </Card.Title>
     </Card>
   </div>
 
 const WeatherDisplay = ({temperature}) => 
 <div>                                
 <Card              
-  style={{    width:'30vw',
-              height:'30vw',
-              marginLeft:'75%',
-              marginRight:'auto',                  
+  style={{    width:'30em',
+              height:'30em',             
               borderRadius:'2em',
               maxHeight:'15em',
               maxWidth:'15em',
@@ -82,18 +86,18 @@ const WeatherDisplay = ({temperature}) =>
     <Card.Title 
     style={{
         color: 'white',
-        textShadow: '0 0 5px black, 0 0 5px black',
-        fontSize: '11vw',
+        textShadow: '0 0 8px black, 0 0 8px black',
+        fontSize: '9em',
         fontFamily:'Patrick Hand',
         fontWeight: 'bold'        
     }}>
-      {temperature}
+      {`${temperature}°`}
       </Card.Title>
    </Card.ImgOverlay>
   </Card>
 </div>
 
-const Scene = ({temperature}) => 
+const Scene = ({temperature, scene, time}) => 
   <Card 
     style={{backgroundColor:'aliceblue',
             width:'1000px',
@@ -106,7 +110,7 @@ const Scene = ({temperature}) =>
             borderRadius:'2em',
             border:'solid .9em lightcoral'            
             }}>
-  <Card.Img src='./scenes/sample.png'
+  <Card.Img src={`./scenes/${scene}.png`}
     style={{
       marginTop:'auto',
       width:'100%',
@@ -114,12 +118,16 @@ const Scene = ({temperature}) =>
     }}
   />
   <Card.ImgOverlay>
-  <div style={{paddingTop:"1%"}}>
+  <div className='flexbox-container' 
+  style={{paddingTop:"1%",
+          flexDirection:'column',
+          marginLeft:'75%',
+        marginRight:'auto', }}>
    <WeatherDisplay temperature={temperature}/>
+   <div style={{height:'.5em '}}/>
+   <TimeDisplay time={time}/>
   </div>
-  {/* <div>
-    <TimeDisplay />
-  </div> */}
+    
   </Card.ImgOverlay>
   </Card>
 
@@ -216,14 +224,31 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode}) => {
 
 function App() {
   const [temperature, setTemperature] = useState(0)
+  const [time, setTime] = useState('')
   const [iconUrl, setIconUrl] = useState('')
   const [showLocationModal, setShowLocationModal] = useState(false)
   const [zipcode, setZipCode] = useState(13206)
+  const [scene, setScene] = useState('warm')
 
   useEffect(() => {
     weatherService.get(zipcode).then(location => 
       {
-        setTemperature(location.temperature)     
+        setTime(location.time)
+        setTemperature(location.temperature)
+        const hour = Number(location.time.match(/^\d\d?/)[0])
+        const PMAM = location.time.match(/PM|AM/)[0]
+
+        if (hour >= 8 && PMAM === 'PM') {
+          setScene('late')
+        } else if (location.temperature <= 30) {
+          setScene('snow')  
+        } else if (location.temperature <= 60) {
+          setScene('cold')  
+        } else if (location.temperature <= 80) {
+          setScene('medium')  
+        } else {
+          setScene('warm')
+        }        
       }
     )
   }
@@ -257,7 +282,7 @@ function App() {
         backgroundColor:'deepskyblue',
         height:'auto',
         width:'100%'}}>
-    <Scene temperature={temperature}      
+    <Scene temperature={temperature} scene={scene} time={time}   
     style={{
         backgroundColor:'deepskyblue',        
         width:'100%'}}/>
