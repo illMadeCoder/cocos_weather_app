@@ -100,9 +100,8 @@ const WeatherDisplay = ({temperature}) =>
 const Scene = ({temperature, scene, time}) => 
   <Card 
     style={{backgroundColor:'aliceblue',
-            width:'1000px',
-            maxWidth:'95%',
-            height:'1000px',
+            width:'60%',
+            height:'90%',
             marginLeft:'auto',
             marginRight:'auto',
             marginTop:'3%',                
@@ -135,7 +134,7 @@ const Description = () =>
   <Card
   style={{
     margin:'4% auto auto auto',      
-    width:'1000px',
+    width:'80%',
     backgroundColor:"lightcoral",
     borderRadius:'2em',
     border:'pink'
@@ -154,7 +153,8 @@ const Credits = ({listOfCredits}) =>
     <Card
     style={{
       margin:'auto auto 2% auto',      
-      width:'1000px',
+      width:'80%',
+      minWidth:'80%',
       backgroundColor:"lightcoral",
       borderRadius:'2em',
       border:'pink'
@@ -273,7 +273,8 @@ function App() {
                 display:"flex",
                 flexDirection:"column",
                 height:'100vh',
-                backgroundColor:'deepskyblue'
+                backgroundColor:'deepskyblue',
+                width:'auto'
               }}>
     <TitleBar title="Coco's Weather App!"
     style={{display:'flex'}}/>
@@ -309,7 +310,8 @@ function App() {
       <Description />
       </div>
       <div style={{marginLeft:'auto',
-                   marginRight: 'auto'}}>
+                   marginRight: 'auto',
+                   width:'100%'}}>
       <Credits listOfCredits={['inventor Coco Moore', 
                               'developer Jesse Bergerstock', 
                               'artist Jasmine Sutton']}
