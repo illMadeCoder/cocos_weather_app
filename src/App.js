@@ -41,8 +41,8 @@ const TimeDisplay = ({time}) =>
   <div>
     <Card
       style={{
-        width:'15em',
-        height:'7em',
+        width:'100%',
+        height:'45%',
         borderRadius: '2em',
         border:'solid .9em lightcoral',
         backgroundColor:'pink'
@@ -66,13 +66,9 @@ const TimeDisplay = ({time}) =>
 const WeatherDisplay = ({temperature}) => 
 <div>                                
 <Card              
-  style={{    width:'30em',
-              height:'30em',             
+  style={{    width:'100%',
+              height:'100%',             
               borderRadius:'2em',
-              maxHeight:'15em',
-              maxWidth:'15em',
-              minHeight:'10em',
-              minWidth:'10em',
               border:'solid .9em lightcoral'
               }}>
    <Card.Img 
