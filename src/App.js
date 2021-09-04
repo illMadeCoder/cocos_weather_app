@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import weatherService from "./services/weather"
-import Card from "react-bootstrap/Card"
 import Modal from "react-bootstrap/Modal"
 import Form from "react-bootstrap/Form"
+import { Textfit } from 'react-textfit'
 
 const TitleBar = ({title}) => 
   <div 
@@ -27,90 +27,82 @@ const TitleBar = ({title}) =>
    </h1>
 </div>
 
-const TimeDisplay = ({time}) =>
-  <div>
-    <div
-      style={{  
-        width:'20vw',
-        height:'8vw',
-        borderRadius: '4vw',
-        border:'solid 1vw lightcoral',
-        backgroundColor:'pink',
-        verticalAlign:'middle'
-      }}>    
-
-    <h2
-    style={{
-        color: 'white',
-        textShadow: '0 0 .5vw black, 0 0 .5vw black',
-        fontSize: '4.5vw',
-        fontFamily:'Patrick Hand',
-        fontWeight: 'bold',
-        textAlign:'center'        
-    }}>
-      {time}
-      </h2>
-    </div>
-  </div>
-
-const WeatherDisplay = ({temperature}) =>                                
-  <div              
-    style={{width:'18vw',
-            height:'18vw',             
-            borderRadius:'2vw',
-            border:'solid lightcoral',
-            borderWidth:'1vw',
-            backgroundImage:'url(./icons/sunshine.png)',
-            backgroundPosition:'center',
-            backgroundSize:'cover',
-            marginLeft:'auto',
-            marginRight:'auto'}}>
-    <h2
-      style={{color: 'white',
-              textShadow: '0 0 .5vw black, 0 0 .5vw black',
-              fontSize: '13vw',
-              textAlign:'center',
-              fontFamily:'Patrick Hand',
-              fontWeight: 'bold'}}>
-      {`${temperature}°`}
-      </h2>
-  </div>
-
-const Scene = ({temperature, scene, time}) => 
-<div
-  style={{
-    marginLeft:'auto',
-    marginRight:'auto',
-    width:'70%',
-    height:'fit-content',
-    position:'relative'
-  }}>
-  <div
-      alt='a scene of a girl dressed approriately for the weather'
+const Scene = ({temperature, time}) => 
+{
+  let scene = 'warm'
+  if (time.length > 1) {
+    const hour = Number(time.match(/^\d\d?/)[0])
+    const PMAM = time.match(/PM|AM/)[0]  
+    console.log(time)
+    if ((hour >= 8 && PMAM === 'PM')
+      || (hour < 6 && PMAM === 'AM')) {
+      scene = 'late'
+    } else if (temperature <= 30) {
+      scene = 'snow'  
+    } else if (temperature <= 60) {
+      scene = 'cold'  
+    } else if (temperature <= 80) {
+      scene = 'medium'  
+    } else {
+      scene = 'warm'
+    }      
+  }
+return <div
       style={{border:'solid lightcoral',        
               borderRadius:'2vw',
               borderWidth:'1vw',
-              maxHeight:'100vh',
-              width:'100%',
+              maxHeight:'100vh',              
               height:'80vw',
+              width:'80vw',
+              maxWidth:'100vh',
               marginLeft:'auto',
               marginRight:'auto',
               backgroundImage:`url(./scenes/${scene}.png)`,
               backgroundSize:'100% 100%',
               backgroundPosition:'center'}}>
-    <div style={{
-      display:'block',
-      marginLeft:'auto',
-      width:'fit-content',
-      marginRight:'2vw',
-      marginTop:'2vw'
-    }}> 
-      <WeatherDisplay temperature={temperature} />
-      <div style={{height:'.5vw'}}/>
-      <TimeDisplay time={time} />
-    </div>
+        <Textfit mode='single'
+          forceSingleModeWidth={false}
+          max={1000}
+           style={{backgroundColor:'yellow',
+                   backgroundImage:'url(./icons/sunshine.png)',
+                   backgroundPosition:'center',
+                   backgroundSize:'cover',
+                   width:'25%',
+                   height:'25%',
+                   marginLeft:'auto',
+                   marginRight:'2%',
+                   marginTop:'2%',
+                   border:'solid lightcoral',
+                   color:'white',
+                   textShadow: '-.1vw -.1vw 0 #000, .1vw -.1vw 0 #000, -.1vw .1vw 0 #000, .1vw .1vw 0 #000', 
+                   borderRadius:'10%',
+                   fontWeight:'bold'
+                   }}>
+          {`${temperature}°`}
+        </Textfit>    
+        <Textfit mode='single'
+          max={1000}
+           style={{backgroundColor:'pink',
+                   backgroundPosition:'center',
+                   backgroundSize:'cover',
+                   width:'25%',
+                   height:'10%',
+                   marginLeft:'auto',
+                   marginRight:'2%',
+                   marginTop:'2%',
+                   border:'solid lightcoral',
+                   color:'white',                   
+                   borderRadius:'10%',
+                   textAlign:'center',
+                   fontWeight:'bold',                  
+                   verticalAlign:'middle',
+                   paddingLeft:'1%',
+                   paddingRight:'1%',
+                   }}>
+          {`${time}`}
+        </Textfit>
   </div>    
-</div>
+}
 
 const Description = () => 
 <div
@@ -222,30 +214,14 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode}) => {
 function App() {
   const [temperature, setTemperature] = useState(0)
   const [time, setTime] = useState('')
-  const [iconUrl, setIconUrl] = useState('')
   const [showLocationModal, setShowLocationModal] = useState(false)
   const [zipcode, setZipCode] = useState(13206)
-  const [scene, setScene] = useState('warm')
 
   useEffect(() => {
     weatherService.get(zipcode).then(location => 
       {
         setTime(location.time)
         setTemperature(location.temperature)
-        const hour = Number(location.time.match(/^\d\d?/)[0])
-        const PMAM = location.time.match(/PM|AM/)[0]
-
-        if (hour >= 8 && PMAM === 'PM') {
-          setScene('late')
-        } else if (location.temperature <= 30) {
-          setScene('snow')  
-        } else if (location.temperature <= 60) {
-          setScene('cold')  
-        } else if (location.temperature <= 80) {
-          setScene('medium')  
-        } else {
-          setScene('warm')
-        }        
       }
     )
   }
@@ -259,7 +235,6 @@ function App() {
   const handleLocationButtonClick = () => {
     setShowLocationModal(!showLocationModal)  
   }
-
   return <>
   <ChangeLocationModal show={showLocationModal} 
                        zipcode={zipcode}
@@ -269,19 +244,19 @@ function App() {
                 display:"flex",
                 flexDirection:"column",
                 backgroundColor:'deepskyblue',
-                minHeight:'100vh'}}>
+                minHeight:'100vh',
+                gap:'1vw'}}>        
     <TitleBar title="Coco's Weather App!" />
-    <div style={{height:'1vw'}}/>
-    <Scene temperature={temperature} scene={scene} time={time} />
-    <div style={{height:'1vw'}}/>
+    <Scene temperature={temperature} time={time} />
     <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
-    <div style={{height:'1vw'}}/>
+    <div style={{flexGrow:1}}/>
     <Description />
-    <div style={{height:'1vw'}}/>
     <Credits listOfCredits={['inventor Coco Moore', 
                               'developer Jesse Bergerstock', 
                               'artist Jasmine Sutton']}
                               style={{marginBottom:'auto'}}/>  
+    <div/>
+    <div style={{flexGrow:1}}/>
     </div>      
     </>}
 
