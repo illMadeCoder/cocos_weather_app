@@ -27,7 +27,7 @@ function get(zipcode) {
         .then(r => {
             const lat = r.coords.latitude
             const lng = r.coords.longitude
-            return axios.get(`http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lng}&username=bebo`)
+            return axios.get(`https://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lng}&username=bebo`)
             .then(r => {
                 const geozipcode =  (zipcode.length > 1 && zipcode) || r.data.postalCodes[0].postalCode            
                 return axios.get(baseUrl + `&query=${geozipcode}`)
