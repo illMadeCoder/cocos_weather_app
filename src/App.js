@@ -43,7 +43,7 @@ const TimeDisplay = ({time}) =>
     style={{
         color: 'white',
         textShadow: '0 0 .5vw black, 0 0 .5vw black',
-        fontSize: '5vw',
+        fontSize: '4.5vw',
         fontFamily:'Patrick Hand',
         fontWeight: 'bold',
         textAlign:'center'        
@@ -85,17 +85,18 @@ const Scene = ({temperature, scene, time}) =>
     height:'fit-content',
     position:'relative'
   }}>
-  <div src={`./scenes/${scene}.png`}
+  <div
       alt='a scene of a girl dressed approriately for the weather'
       style={{border:'solid lightcoral',        
               borderRadius:'2vw',
               borderWidth:'1vw',
+              maxHeight:'100vh',
               width:'100%',
               height:'80vw',
               marginLeft:'auto',
               marginRight:'auto',
               backgroundImage:`url(./scenes/${scene}.png)`,
-              backgroundSize:'cover',
+              backgroundSize:'100% 100%',
               backgroundPosition:'center'}}>
     <div style={{
       display:'block',
