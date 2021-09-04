@@ -27,13 +27,14 @@ const TitleBar = ({title}) =>
    </h1>
 </div>
 
-const Scene = ({temperature, time}) => 
+const Scene = ({temperature, time, weatherCode}) => 
 {
   let scene = 'warm'
+  let icon = 'clear'
+
   if (time.length > 1) {
     const hour = Number(time.match(/^\d\d?/)[0])
     const PMAM = time.match(/PM|AM/)[0]  
-    console.log(time)
     if ((hour >= 8 && PMAM === 'PM')
       || (hour < 6 && PMAM === 'AM')) {
       scene = 'late'
@@ -45,7 +46,29 @@ const Scene = ({temperature, time}) =>
       scene = 'medium'  
     } else {
       scene = 'warm'
-    }      
+    }     
+    
+    const icon_weatherCode_map = {
+      clear:[113],
+      partly_cloudy:[116,119],
+      cloudy:[122, 143, 176, 179, 
+              200, 248, 260, 263,  
+              266, 281, 293, 296],
+      rain:[296, 299, 302, 205,  
+            208, 356, 359, 362,
+            377, 386, 389, 392],
+      snow:[227, 230, 281, 284, 
+            311, 314, 317, 320, 
+            323, 326, 329, 335, 
+            338, 350, 365, 368, 
+            374, 395]
+    }
+    for (const [key, value] of Object.entries(icon_weatherCode_map)) {
+      if (value.includes(weatherCode)) {
+        icon = key
+        break
+      }
+    }
   }
 return <div
       style={{border:'solid lightcoral',        
@@ -64,7 +87,7 @@ return <div
           forceSingleModeWidth={false}
           max={1000}
            style={{backgroundColor:'yellow',
-                   backgroundImage:'url(./icons/sunshine.png)',
+                   backgroundImage:`url(./icons/${icon}.png)`,
                    backgroundPosition:'center',
                    backgroundSize:'cover',
                    width:'25%',
@@ -213,6 +236,7 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode}) => {
 
 function App() {
   const [temperature, setTemperature] = useState(0)
+  const [weatherCode, setWeatherCode] = useState(0)
   const [time, setTime] = useState('')
   const [showLocationModal, setShowLocationModal] = useState(false)
   const [zipcode, setZipCode] = useState(13206)
@@ -222,6 +246,8 @@ function App() {
       {
         setTime(location.time)
         setTemperature(location.temperature)
+        setZipCode(location.zipcode)
+        setWeatherCode(location.weatherCode)
       }
     )
   }
@@ -247,7 +273,7 @@ function App() {
                 minHeight:'100vh',
                 gap:'1vw'}}>        
     <TitleBar title="Coco's Weather App!" />
-    <Scene temperature={temperature} time={time} />
+    <Scene temperature={temperature} time={time} weatherCode={weatherCode} />
     <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
     <div style={{flexGrow:1}}/>
     <Description />
