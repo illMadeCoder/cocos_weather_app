@@ -2,189 +2,189 @@ import React, {useState, useEffect} from "react";
 import weatherService from "./services/weather"
 import Card from "react-bootstrap/Card"
 import Modal from "react-bootstrap/Modal"
-import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 
 const TitleBar = ({title}) => 
   <div 
-  style={{backgroundColor:"pink",              
-          display:'flex',
-          minWidth:'100%',
-          borderBottom:'solid .4em lightcoral'
-          }}>
-  <Card className='text-center'
-    style={{backgroundColor:"lightcoral",
-            marginLeft:'auto',
-            marginRight:'auto',
-            height:'20vw',
-            width:"60vw",
-            borderRadius:'2em',
-            maxHeight:'8em',
-            minHeight:'8em',
-            marginTop:'2%',
-            marginBottom:'2%'            
-            }}>
-    <Card.Title
-      style={{fontSize:'6vw',
+  style={{backgroundColor:"pink",
+          borderBottom:'solid 1vw lightcoral',
+          paddingTop:'1vw',
+          height:'fit-content'}}>
+    <h1
+      style={{backgroundColor:"lightcoral",
+              borderRadius:'3vw',   
+              width:'fit-content',           
+              height:'fit-content',
+              paddingLeft:'2%',
+              paddingRight:'2%',
               color:'white',
               fontFamily:'Patrick Hand',
-              marginTop:'auto',
-              marginBottom:'auto',
-              paddingLeft:'1vw',
-              paddingRight:'1vw'}}>
+              fontSize:'10vw',
+              marginLeft:'auto', // center
+              marginRight:'auto',
+              textAlign:'center'}}>
       {title}
-    </Card.Title>
-  </Card>
+   </h1>
 </div>
 
 const TimeDisplay = ({time}) =>
   <div>
-    <Card
-      style={{
-        width:'100%',
-        height:'45%',
-        borderRadius: '2em',
-        border:'solid .9em lightcoral',
-        backgroundColor:'pink'
+    <div
+      style={{  
+        width:'20vw',
+        height:'8vw',
+        borderRadius: '4vw',
+        border:'solid 1vw lightcoral',
+        backgroundColor:'pink',
+        verticalAlign:'middle'
       }}>    
 
-    <Card.Title 
+    <h2
     style={{
         color: 'white',
-        textShadow: '0 0 5px black, 0 0 5px black',
-        fontSize: '4em',
+        textShadow: '0 0 .5vw black, 0 0 .5vw black',
+        fontSize: '5vw',
         fontFamily:'Patrick Hand',
         fontWeight: 'bold',
-        marginLeft:'auto',
-        marginRight:'auto'
+        textAlign:'center'        
     }}>
       {time}
-      </Card.Title>
-    </Card>
+      </h2>
+    </div>
   </div>
 
-const WeatherDisplay = ({temperature}) => 
-<div>                                
-<Card              
-  style={{    width:'100%',
-              height:'100%',             
-              borderRadius:'2em',
-              border:'solid .9em lightcoral'
-              }}>
-   <Card.Img 
-    src="./icons/sunshine.png" 
-    alt="Card Image"/>
-   <Card.ImgOverlay 
-   style={{
-    marginTop:'auto',
-    marginBottom:'90%'            
-   }}>
-    <Card.Title 
-    style={{
-        color: 'white',
-        textShadow: '0 0 8px black, 0 0 8px black',
-        fontSize: '9em',
-        fontFamily:'Patrick Hand',
-        fontWeight: 'bold'        
-    }}>
+const WeatherDisplay = ({temperature}) =>                                
+  <div              
+    style={{width:'18vw',
+            height:'18vw',             
+            borderRadius:'2vw',
+            border:'solid lightcoral',
+            borderWidth:'1vw',
+            backgroundImage:'url(./icons/sunshine.png)',
+            backgroundPosition:'center',
+            backgroundSize:'cover',
+            marginLeft:'auto',
+            marginRight:'auto'}}>
+    <h2
+      style={{color: 'white',
+              textShadow: '0 0 .5vw black, 0 0 .5vw black',
+              fontSize: '13vw',
+              textAlign:'center',
+              fontFamily:'Patrick Hand',
+              fontWeight: 'bold'}}>
       {`${temperature}°`}
-      </Card.Title>
-   </Card.ImgOverlay>
-  </Card>
-</div>
+      </h2>
+  </div>
 
 const Scene = ({temperature, scene, time}) => 
-  <Card 
-    style={{backgroundColor:'aliceblue',
-            width:'60%',
-            height:'90%',
-            marginLeft:'auto',
-            marginRight:'auto',
-            marginTop:'3%',                
-            marginBottom:'1%',
-            borderRadius:'2em',
-            border:'solid .9em lightcoral'            
-            }}>
-  <Card.Img src={`./scenes/${scene}.png`}
-    style={{
-      marginTop:'auto',
-      width:'100%',
-      height:'100%'
-    }}
-  />
-  <Card.ImgOverlay>
-  <div className='flexbox-container' 
-  style={{paddingTop:"1%",
-          flexDirection:'column',
-          marginLeft:'75%',
-        marginRight:'auto', }}>
-   <WeatherDisplay temperature={temperature}/>
-   <div style={{height:'.5em '}}/>
-   <TimeDisplay time={time}/>
-  </div>
-    
-  </Card.ImgOverlay>
-  </Card>
+<div
+  style={{
+    marginLeft:'auto',
+    marginRight:'auto',
+    width:'70%',
+    height:'fit-content',
+    position:'relative'
+  }}>
+  <div src={`./scenes/${scene}.png`}
+      alt='a scene of a girl dressed approriately for the weather'
+      style={{border:'solid lightcoral',        
+              borderRadius:'2vw',
+              borderWidth:'1vw',
+              width:'100%',
+              height:'80vw',
+              marginLeft:'auto',
+              marginRight:'auto',
+              backgroundImage:`url(./scenes/${scene}.png)`,
+              backgroundSize:'cover',
+              backgroundPosition:'center'}}>
+    <div style={{
+      display:'block',
+      marginLeft:'auto',
+      width:'fit-content',
+      marginRight:'2vw',
+      marginTop:'2vw'
+    }}> 
+      <WeatherDisplay temperature={temperature} />
+      <div style={{height:'.5vw'}}/>
+      <TimeDisplay time={time} />
+    </div>
+  </div>    
+</div>
 
 const Description = () => 
-  <Card
+<div
   style={{
-    margin:'4% auto auto auto',      
+    marginLeft:'auto',
+    marginRight:'auto',
     width:'80%',
     backgroundColor:"lightcoral",
-    borderRadius:'2em',
+    borderRadius:'2vw',
     border:'pink'
-  }}>
-<Card.Text
-    style={{
-      color: 'white',
-      fontSize: '3em',
-      fontFamily:'Patrick Hand',
-      paddingLeft:'2%',        
-  }}> coco's weather app presents the solution for when you just don't know what to wear outside! Come night, rain, snow, or sunshine this app will make sure you're appropriately dressed for the occasion....
-    </Card.Text>   
-    </Card>
-
-const Credits = ({listOfCredits}) =>
-    <Card
-    style={{
-      margin:'auto auto 2% auto',      
-      width:'80%',
-      minWidth:'80%',
-      backgroundColor:"lightcoral",
-      borderRadius:'2em',
-      border:'pink'
-    }}>     
-      <Card.Title
+  }}>    
+      <h2
       style={{
         color: 'white',
-        fontSize: '3em',
+        fontSize: '5vw',
         fontFamily:'Patrick Hand',
         paddingLeft:'2%',
         marginTop:'1%'
     }}>
-        Credits
-      </Card.Title>
-      {listOfCredits.map(credit =>       
-      <Card.Text key={credit}
+        What is this?
+      </h2>
+<h2
+    style={{
+      color: 'white',
+      fontSize: '4vw',
+      fontFamily:'Patrick Hand',
+      paddingLeft:'2vw',
+      paddingRight:'2vw'
+  }}> coco's weather app presents the solution for when you just don't know what to wear outside! Come night, rain, snow, or sunshine this app will make sure you're appropriately dressed for the occasion....
+  </h2>   
+</div>
+
+const Credits = ({listOfCredits}) =>
+    <div
+    style={{
+      marginLeft:'auto',
+      marginRight:'auto',
+      width:'80%',
+      minWidth:'80%',
+      backgroundColor:"lightcoral",
+      borderRadius:'2vw',
+      border:'pink'
+    }}>     
+      <h2
       style={{
         color: 'white',
-        fontSize: '3em',
+        fontSize: '5vw',
+        fontFamily:'Patrick Hand',
+        paddingLeft:'2%',
+        marginTop:'1%'
+    }}>
+        Who Made This?
+      </h2>
+      {listOfCredits.map(credit =>       
+      <h2 key={credit}
+      style={{
+        color: 'white',
+        fontSize: '4vw',
         fontFamily:'Patrick Hand',
         paddingLeft:'2%'
     }}>> {credit}
-      </Card.Text>)}                        
-    </Card>
+      </h2>)}                        
+    </div>
 
 const ChangeLocationButton = ({handleClick, zipcode}) => 
       <button 
         onClick={() => handleClick()}
         style={{
-          width:'auto',
+          width:'50%',
+          marginLeft:'auto',
+          marginRight:'auto',
           backgroundColor:'lightcoral',
           border:'none',
           fontFamily:'Patrick Hand',
-          fontSize:'4em',
+          fontSize:'6vw',
           outline:'none',
           color:'white'
         }}>
@@ -263,57 +263,24 @@ function App() {
   <ChangeLocationModal show={showLocationModal} 
                        zipcode={zipcode}
                        handleNewZipCode={handleNewZipCode}/>
-  <div className="flex-container"
-              style=
-              {{
+  <div className="flex"
+              style={{
                 display:"flex",
                 flexDirection:"column",
-                height:'100vh',
                 backgroundColor:'deepskyblue',
-                width:'auto'
-              }}>
-    <TitleBar title="Coco's Weather App!"
-    style={{display:'flex'}}/>
-    <div 
-     style={{
-        backgroundColor:'deepskyblue',
-        height:'auto',
-        width:'100%'}}>
-    <Scene temperature={temperature} scene={scene} time={time}   
-    style={{
-        backgroundColor:'deepskyblue',        
-        width:'100%'}}/>
-    </div>
-    <div
-      style={{
-        backgroundColor:"deepskyblue",
-        textAlign:'center'
-      }}>
-      <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />
-    </div>
-    <div 
-      style={{
-      display:'flex',
-      flexGrow:1,
-      backgroundColor:'deepskyblue',
-      flexDirection:'column'   
-      }}>
-      <div
-      style={{
-        backgroundColor:'deepskyblue',
-        paddingBottom:'2%'
-      }}>
-      <Description />
-      </div>
-      <div style={{marginLeft:'auto',
-                   marginRight: 'auto',
-                   width:'100%'}}>
-      <Credits listOfCredits={['inventor Coco Moore', 
+                minHeight:'100vh'}}>
+    <TitleBar title="Coco's Weather App!" />
+    <div style={{height:'1vw'}}/>
+    <Scene temperature={temperature} scene={scene} time={time} />
+    <div style={{height:'1vw'}}/>
+    <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
+    <div style={{height:'1vw'}}/>
+    <Description />
+    <div style={{height:'1vw'}}/>
+    <Credits listOfCredits={['inventor Coco Moore', 
                               'developer Jesse Bergerstock', 
                               'artist Jasmine Sutton']}
-                              style={{marginBottom:'auto'}}/>     
-      </div>
-      </div>
+                              style={{marginBottom:'auto'}}/>  
     </div>      
     </>}
 
