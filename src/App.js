@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from "react";
 import weatherService from "./services/weather"
-import Modal from "react-bootstrap/Modal"
-import Form from "react-bootstrap/Form"
 import { Textfit } from 'react-textfit'
+import Modal from "react-modal"
 
 const TitleBar = ({title}) => 
   <div 
@@ -32,7 +31,7 @@ const Scene = ({temperature, time, weatherCode}) =>
   let scene = 'warm'
   let icon = 'clear'
 
-  if (time.length > 1) {
+  if (time && time.length > 1) {
     const hour = Number(time.match(/^\d\d?/)[0])
     const PMAM = time.match(/PM|AM/)[0]  
     if ((hour >= 8 && PMAM === 'PM')
@@ -47,28 +46,33 @@ const Scene = ({temperature, time, weatherCode}) =>
     } else {
       scene = 'warm'
     }     
-    
-    const icon_weatherCode_map = {
-      clear:[113],
-      partly_cloudy:[116,119],
-      cloudy:[122, 143, 176, 179, 
-              200, 248, 260, 263,  
-              266, 281, 293, 296],
-      rain:[296, 299, 302, 205,  
-            208, 356, 359, 362,
-            377, 386, 389, 392],
-      snow:[227, 230, 281, 284, 
-            311, 314, 317, 320, 
-            323, 326, 329, 335, 
-            338, 350, 365, 368, 
-            374, 395]
-    }
-    for (const [key, value] of Object.entries(icon_weatherCode_map)) {
-      if (value.includes(weatherCode)) {
-        icon = key
-        break
+    if ((hour >= 8 && PMAM === 'PM')      
+    || (hour < 6 && PMAM === 'AM')) {
+      icon = 'late'
+    } else {
+      const icon_weatherCode_map = {
+        clear:[113],
+        partly_cloudy:[116,119],
+        cloudy:[122, 143, 176, 179, 
+                200, 248, 260, 263,  
+                266, 281, 293, 296],
+        rain:[296, 299, 302, 205,  
+              208, 356, 359, 362,
+              377, 386, 389, 392],
+        snow:[227, 230, 281, 284, 
+              311, 314, 317, 320, 
+              323, 326, 329, 335, 
+              338, 350, 365, 368, 
+              374, 395]
+      }
+      for (const [key, value] of Object.entries(icon_weatherCode_map)) {
+        if (value.includes(weatherCode)) {
+          icon = key
+          break
+        }
       }
     }
+
   }
 return <div
       style={{border:'solid lightcoral',        
@@ -97,7 +101,7 @@ return <div
                    marginTop:'2%',
                    border:'solid lightcoral',
                    color:'white',
-                   textShadow: '-.1vw -.1vw 0 #000, .1vw -.1vw 0 #000, -.1vw .1vw 0 #000, .1vw .1vw 0 #000', 
+                   textShadow: '-.015em -.015em 0 #000, .015em -.015em 0 #000, -.015em .015em 0 #000, .015em .015em 0 #000', 
                    borderRadius:'10%',
                    fontWeight:'bold'
                    }}>
@@ -109,7 +113,7 @@ return <div
                    backgroundPosition:'center',
                    backgroundSize:'cover',
                    width:'25%',
-                   height:'10%',
+                   height:'8%',
                    marginLeft:'auto',
                    marginRight:'2%',
                    marginTop:'2%',
@@ -118,9 +122,9 @@ return <div
                    borderRadius:'10%',
                    textAlign:'center',
                    fontWeight:'bold',                  
-                   verticalAlign:'middle',
                    paddingLeft:'1%',
                    paddingRight:'1%',
+                   paddingBottom:'9%'
                    }}>
           {`${time}`}
         </Textfit>
@@ -207,30 +211,35 @@ const ChangeLocationButton = ({handleClick, zipcode}) =>
         {`Change Zip Code (${zipcode})`}
       </button>
     
-const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode}) => {
-  const [newZipCode, setNewZipCode] = useState('')
-  return  <Modal show={show}> 
-    <Modal.Dialog size='lg'>
-      <Modal.Header>
-        <Modal.Title>Where are you?</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={(e) => 
-          {
-            e.preventDefault()
-            handleNewZipCode(newZipCode)
-          }}>
-          <Form.Group controlId="exampleForm.ControlInput1">
-            <Form.Label>Enter Your Zip Code</Form.Label>
-            <Form.Control     
-            placeholder={prevZipCode} 
-            required
-            type='text'
-            onChange={(e) => setNewZipCode(e.target.value)}/>
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-    </Modal.Dialog>
+const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode, handleBadZipCode}) => {
+  const [newZipCode, setNewZipCode] = useState(prevZipCode)
+  return <Modal     
+            isOpen={show}
+            onAfterOpen={() => {}}
+            onRequestClose={() => {}}
+            style={{content:{top:'50%', 
+                            left:'50%', 
+                            right:'auto', 
+                            bottom:'auto', 
+                            marginRight:'-50%', 
+                            transform: 'translate(-50%, -50%)',
+                            backgroundColor:'lightcoral'}}}>
+              <h2 style={{
+                color:'white',
+                fontFamily:'Patrick Hand'
+              }}>
+                Type a ZipCode
+                </h2>
+              <form onSubmit={(e) => {
+                e.preventDefault()
+                if (/^\d{5}$/.test(newZipCode)) {
+                  handleNewZipCode(newZipCode)
+                } else {
+                  handleBadZipCode(newZipCode)
+                }
+              }}>
+                <input onChange={(e) => setNewZipCode(e.target.value)}/>
+              </form>
   </Modal>
 }
 
@@ -239,51 +248,77 @@ function App() {
   const [weatherCode, setWeatherCode] = useState(0)
   const [time, setTime] = useState('')
   const [showLocationModal, setShowLocationModal] = useState(false)
-  const [zipcode, setZipCode] = useState(13206)
-
+  const [zipcode, setZipCode] = useState(null)
+  const [userZipCode, setUserZipCode] = useState(null)
   useEffect(() => {
-    weatherService.get(zipcode).then(location => 
-      {
-        setTime(location.time)
-        setTemperature(location.temperature)
-        setZipCode(location.zipcode)
-        setWeatherCode(location.weatherCode)
-      }
-    )
+    
+    if (userZipCode) {
+      weatherService.getbyzipcode(userZipCode).then(location => 
+        {
+          setTime(location.time)
+          setTemperature(location.temperature)
+          setZipCode(location.zipcode)
+          setWeatherCode(location.weatherCode)
+        }
+      )
+    } else {
+      weatherService.get().then(location => 
+        {
+          setTime(location.time)
+          setTemperature(location.temperature)
+          setZipCode(location.zipcode)
+          setWeatherCode(location.weatherCode)
+        }
+      )
+    }
   }
-  ,[zipcode])
+  ,[zipcode, userZipCode])
 
-  const handleNewZipCode = (newZipCode) => {
-    setZipCode(newZipCode)
+  const handleNewZipCode = (formZipCode) => {    
+    setZipCode(formZipCode)
+    setUserZipCode(formZipCode)
     setShowLocationModal(false)
   }
+
+  const handleBadZipCode = (formZipCode) => {    
+    setShowLocationModal(false)
+  }  
 
   const handleLocationButtonClick = () => {
     setShowLocationModal(!showLocationModal)  
   }
-  return <>
-  <ChangeLocationModal show={showLocationModal} 
-                       zipcode={zipcode}
-                       handleNewZipCode={handleNewZipCode}/>
-  <div className="flex"
-              style={{
-                display:"flex",
-                flexDirection:"column",
-                backgroundColor:'deepskyblue',
-                minHeight:'100vh',
-                gap:'1vw'}}>        
-    <TitleBar title="Coco's Weather App!" />
-    <Scene temperature={temperature} time={time} weatherCode={weatherCode} />
-    <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
-    <div style={{flexGrow:1}}/>
-    <Description />
-    <Credits listOfCredits={['inventor Coco Moore', 
-                              'developer Jesse Bergerstock', 
-                              'artist Jasmine Sutton']}
-                              style={{marginBottom:'auto'}}/>  
-    <div/>
-    <div style={{flexGrow:1}}/>
-    </div>      
-    </>}
+
+  if (temperature !== 0) {
+    return <>
+            <ChangeLocationModal 
+              show={showLocationModal} 
+              zipcode={zipcode}
+              handleNewZipCode={handleNewZipCode}
+              handleBadZipCode={handleBadZipCode}/>
+              <div className="flex"
+                    style={{
+                    display:"flex",
+                    flexDirection:"column",
+                    backgroundColor:'deepskyblue',
+                    minHeight:'100vh',
+                    gap:'1vw'}}>        
+                <TitleBar title="Coco's Weather App!" />
+                <Scene temperature={temperature} time={time} weatherCode={weatherCode} />
+                <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
+                <div style={{flexGrow:1}}/>
+                <Description />
+                <Credits listOfCredits={['inventor Coco Moore', 
+                          'developer Jesse Bergerstock', 
+                          'artist Jasmine Sutton']}
+                          style={{marginBottom:'auto'}}/>  
+                <div/>
+                <div style={{flexGrow:1}}/>
+              </div>      
+            </>
+  } else {
+    return <div/>
+  }
+  
+}
 
 export default App;
