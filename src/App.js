@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import weatherService from "./services/weather"
 import { Textfit } from 'react-textfit'
 import Modal from "react-modal"
-import ClipLoader from "react-spinners/ClipLoader"
+import GridLoader from "react-spinners/GridLoader"
 
 Modal.setAppElement('#root');
 
@@ -229,7 +229,8 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode, handleBadZipC
                             backgroundColor:'lightcoral'}}}>
               <h2 style={{
                 color:'white',
-                fontFamily:'Patrick Hand'
+                fontFamily:'Patrick Hand',
+                fontSize:'4em'
               }}>
                 Type in a ZipCode!
                 </h2>
@@ -241,7 +242,21 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode, handleBadZipC
                   handleBadZipCode(newZipCode)
                 }
               }}>
-                <input autoFocus onChange={(e) => setNewZipCode(e.target.value)}/>
+                <input autoFocus 
+                       onChange={(e) => {
+                         if (/^\d{0,5}$/.test(e.target.value)) {
+                          setNewZipCode(e.target.value)
+                         }
+ 
+
+                       }}
+                       value={newZipCode}
+                       style={{
+                         fontFamily:'Patrick Hand',
+                         fontSize:'4em',
+                         width:'4em'
+                       }}
+                />
               </form>
   </Modal>
 }
@@ -319,8 +334,19 @@ function App() {
                 </div> 
               </div>        
   } else {
-    return <div className='sweet-loading'>
-      <ClipLoader color={'pink'} loading={true} css={{display:'block'}} size={150} />
+    return <div className='sweet-loading'
+    style={{
+      position:'fixed',
+      left:"50%",
+      top:"50%",
+      transform: "translate(-50%, 50%)"
+    }}>
+      <GridLoader 
+        color={'pink'} 
+        loading={true} 
+        css=''
+        size={30}
+        margin={1} />
     </div>
   }
   
