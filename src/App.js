@@ -2,6 +2,9 @@ import React, {useState, useEffect} from "react";
 import weatherService from "./services/weather"
 import { Textfit } from 'react-textfit'
 import Modal from "react-modal"
+import ClipLoader from "react-spinners/ClipLoader"
+
+Modal.setAppElement('#root');
 
 const TitleBar = ({title}) => 
   <div 
@@ -228,7 +231,7 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode, handleBadZipC
                 color:'white',
                 fontFamily:'Patrick Hand'
               }}>
-                Type a ZipCode
+                Type in a ZipCode!
                 </h2>
               <form onSubmit={(e) => {
                 e.preventDefault()
@@ -238,7 +241,7 @@ const ChangeLocationModal = ({show, prevZipCode, handleNewZipCode, handleBadZipC
                   handleBadZipCode(newZipCode)
                 }
               }}>
-                <input onChange={(e) => setNewZipCode(e.target.value)}/>
+                <input autoFocus onChange={(e) => setNewZipCode(e.target.value)}/>
               </form>
   </Modal>
 }
@@ -250,8 +253,8 @@ function App() {
   const [showLocationModal, setShowLocationModal] = useState(false)
   const [zipcode, setZipCode] = useState(null)
   const [userZipCode, setUserZipCode] = useState(null)
-  useEffect(() => {
-    
+
+  useEffect(() => {    
     if (userZipCode) {
       weatherService.getbyzipcode(userZipCode).then(location => 
         {
@@ -285,38 +288,40 @@ function App() {
   }  
 
   const handleLocationButtonClick = () => {
-    setShowLocationModal(!showLocationModal)  
+    setShowLocationModal(true)  
   }
 
   if (temperature !== 0) {
-    return <>
-            <ChangeLocationModal 
-              show={showLocationModal} 
-              zipcode={zipcode}
-              handleNewZipCode={handleNewZipCode}
-              handleBadZipCode={handleBadZipCode}/>
-              <div className="flex"
-                    style={{
-                    display:"flex",
-                    flexDirection:"column",
-                    backgroundColor:'deepskyblue',
-                    minHeight:'100vh',
-                    gap:'1vw'}}>        
-                <TitleBar title="Coco's Weather App!" />
-                <Scene temperature={temperature} time={time} weatherCode={weatherCode} />
-                <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
-                <div style={{flexGrow:1}}/>
-                <Description />
-                <Credits listOfCredits={['inventor Coco Moore', 
-                          'developer Jesse Bergerstock', 
-                          'artist Jasmine Sutton']}
-                          style={{marginBottom:'auto'}}/>  
-                <div/>
-                <div style={{flexGrow:1}}/>
-              </div>      
-            </>
+      return <div style={{backgroundColor:'pink'}}>
+                <ChangeLocationModal 
+                  show={showLocationModal} 
+                  zipcode={zipcode}
+                  handleNewZipCode={handleNewZipCode}
+                  handleBadZipCode={handleBadZipCode}/>
+                      <div className="flex"
+                      style={{
+                      display:"flex",
+                      flexDirection:"column",
+                      backgroundColor:'deepskyblue',
+                      minHeight:'100vh',
+                      gap:'1vw'}}>        
+                  <TitleBar title="Coco's Weather App!" />
+                  <Scene temperature={temperature} time={time} weatherCode={weatherCode} />
+                  <ChangeLocationButton handleClick={handleLocationButtonClick} zipcode={zipcode} />    
+                  <div style={{flexGrow:1}}/>
+                  <Description />
+                  <Credits listOfCredits={['inventor Coco Moore', 
+                            'developer Jesse Bergerstock', 
+                            'artist Jasmine Sutton']}
+                            style={{marginBottom:'auto'}}/>  
+                  <div/>
+                  <div style={{flexGrow:1}}/>
+                </div> 
+              </div>        
   } else {
-    return <div/>
+    return <div className='sweet-loading'>
+      <ClipLoader color={'pink'} loading={true} css={{display:'block'}} size={150} />
+    </div>
   }
   
 }
