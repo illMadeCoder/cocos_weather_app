@@ -17,6 +17,7 @@ function App() {
   const [userZipCode, setUserZipCode] = useState(null)
   const [loaded, setLoaded] = useState(false)
   const [isBadZipCode, setIsBadZipCode] = useState(false)
+  const [locationName, setLocationName] = useState(null)
 
   useEffect(() => {  
     (async () => {
@@ -34,7 +35,8 @@ function App() {
         setIsBadZipCode(false)
         setShowLocationModal(false)
         setLoaded(true)            
-        setUserZipCode(location.zipcode)     
+        setUserZipCode(location.zipcode)    
+        setLocationName(location.name) 
       }
       catch (err) {
         setIsBadZipCode(true)
@@ -81,7 +83,7 @@ function App() {
                   <TitleBar title="Coco's Weather App!" />
                   <Scene temperature={temperature} time={time} weatherCode={weatherCode} />
                   <ChangeLocationButton handleClick={handleLocationButtonClick} 
-                                        zipcode={zipcode}  />    
+                                        location={locationName}  />    
                   <div style={{flexGrow:1}}/>
                   <Description />
                   <Credits listOfCredits={['inventor Coco Moore', 

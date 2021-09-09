@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-anonymous-default-export
-export default ({handleClick, zipcode}) => 
+export default ({handleClick, location}) => 
       <button 
         onClick={() => handleClick()}
         style={{
@@ -13,5 +13,5 @@ export default ({handleClick, zipcode}) =>
           outline:'none',
           color:'white'
         }}>
-        {`Change Zip Code (${zipcode})`}
+        {`Change Location (${location})`}
       </button>

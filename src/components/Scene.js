@@ -23,7 +23,12 @@ export default ({temperature, time, weatherCode}) =>
     }     
     if ((hour >= 8 && PMAM === 'PM')      
     || (hour < 6 && PMAM === 'AM')) {
-      icon = 'late'
+      if (temperature <= 40) {
+        icon = 'late_cold'
+      } else {
+        icon = 'late_warm'
+      }
+
     } else {
       const icon_weatherCode_map = {
         clear:[113],
