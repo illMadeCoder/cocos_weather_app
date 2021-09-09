@@ -1,7 +1,8 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default ({title}) => 
     <div 
-    style={{backgroundColor:"pink",
+    style={{
+            backgroundColor:"pink",
             borderBottom:'solid 1vw lightcoral',
             paddingTop:'1vw',
             height:'fit-content'}}>
