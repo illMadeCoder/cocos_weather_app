@@ -11,7 +11,11 @@ export default ({temperature, time, weatherCode}) =>
     const PMAM = time.match(/PM|AM/)[0]  
     if ((hour >= 8 && hour < 12 && PMAM === 'PM')
       || ((hour < 6 || hour === 12) && PMAM === 'AM')) {
-      scene = 'late'
+        if (temperature <= 60) {
+          scene = 'late_cold'
+        } else {
+          scene = 'late_warm'
+        }      
     } else if (temperature <= 30) {
       scene = 'snow'  
     } else if (temperature <= 60) {
@@ -23,12 +27,7 @@ export default ({temperature, time, weatherCode}) =>
     }     
     if ((hour >= 8 && PMAM === 'PM')      
     || (hour < 6 && PMAM === 'AM')) {
-      if (temperature <= 40) {
-        icon = 'late_cold'
-      } else {
-        icon = 'late_warm'
-      }
-
+      icon = 'late'
     } else {
       const icon_weatherCode_map = {
         clear:[113],
