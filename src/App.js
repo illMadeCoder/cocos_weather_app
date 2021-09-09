@@ -19,57 +19,40 @@ function App() {
   const [isBadZipCode, setIsBadZipCode] = useState(false)
 
   useEffect(() => {  
-    setLoaded(false)
-    setIsBadZipCode(false)
-    if (userZipCode) {
-      weatherService.getbyzipcode(userZipCode).then(location => 
-        {
-          setTime(location.time)
-          setTemperature(location.temperature)
-          setZipCode(location.zipcode)
-          setWeatherCode(location.weatherCode)
-          setIsBadZipCode(false)
-          setShowLocationModal(false)
-          setLoaded(true)            
-          setUserZipCode(location.zipcode)                  
-        }
-      ).catch(err => {
+    (async () => {
+      setLoaded(false)
+      setIsBadZipCode(false)
+      try {
+        const location = userZipCode ? 
+                          await weatherService.getbyzipcode(userZipCode) :
+                          await weatherService.get()
+
+        setTime(location.time)
+        setTemperature(location.temperature)
+        setZipCode(location.zipcode)
+        setWeatherCode(location.weatherCode)
+        setIsBadZipCode(false)
+        setShowLocationModal(false)
+        setLoaded(true)            
+        setUserZipCode(location.zipcode)     
+      }
+      catch (err) {
         setIsBadZipCode(true)
         setLoaded(true)
         setShowLocationModal(true)
-        console.log(err)        
-      })
-    } else {
-      weatherService.get().then(location => 
-        {
-          setTime(location.time)
-          setTemperature(location.temperature)
-          setZipCode(location.zipcode)
-          setWeatherCode(location.weatherCode)
-          setIsBadZipCode(false)
-          setShowLocationModal(false)
-          setLoaded(true)
-          setUserZipCode(location.zipcode)
-        }
-        ).catch(err => {
-          setIsBadZipCode(true)
-          setLoaded(true)
-          setShowLocationModal(true)
-          console.log(err)        
-        })
-    }
+        console.log(err)     
+      }                            
+    })()
   }
   ,[userZipCode])
 
   const handleNewZipCode = (formZipCode) => {  
-    console.log('b')   
     setZipCode(formZipCode)
     setUserZipCode(formZipCode)
     setShowLocationModal(false)
   }
 
   const handleBadZipCode = (formZipCode) => {   
-    console.log('a') 
     setShowLocationModal(true)
     setIsBadZipCode(true)
   }  
