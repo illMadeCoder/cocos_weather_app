@@ -1,12 +1,12 @@
 import axios from 'axios'
 const baseUrl =  `/api/location`
 
-async function getbyzipcode(zipcode) { 
-    const response = await axios.get(baseUrl+'?zipcode='+zipcode)
+async function getbyzipcode(zipcode) {     
+    const response = await axios.get(baseUrl+'?zipcode='+zipcode)        
     return response.data
 }   
 
-async function get() { 
+async function get() {
     const geo = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject))
     const lat = geo.coords.latitude
     const lng = geo.coords.longitude

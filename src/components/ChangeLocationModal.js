@@ -30,21 +30,15 @@ export default function ({ show, prevZipCode, handleNewZipCode, handleBadZipCode
             marginRight: 'auto',
             textAlign: 'center'
         }}>
-            {isBadZipCode === true ? "We Don't know that Zip Code Try Again" : 'Type in a ZipCode!'}
+            {isBadZipCode === true ? "Unknown ZipCode - Try Again" : 'Type in a ZipCode!'}
         </h2>
         <form onSubmit={(e) => {
             e.preventDefault()
-            if (/^\d{5}$/.test(newZipCode)) {
-                handleNewZipCode(newZipCode)
-            } else {
-                handleBadZipCode(newZipCode)
-            }
+            handleNewZipCode(newZipCode)
         } }>
             <input autoFocus
                 onChange={(e) => {
-                    if (/^\d{0,5}$/.test(e.target.value)) {
-                        setNewZipCode(e.target.value)
-                    }
+                    setNewZipCode(e.target.value)
                 } }
                 value={newZipCode}
                 style={{

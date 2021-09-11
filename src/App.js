@@ -7,6 +7,7 @@ import Description from "./components/Description";
 import Credits from "./components/Credits";
 import ChangeLocationButton from "./components/ChangeLocationButton";
 import Loader from "./components/Loader";
+import ErrorMessage from "./components/ErrorMessage"
     
 function App() {
   const [temperature, setTemperature] = useState(0)
@@ -18,7 +19,8 @@ function App() {
   const [loaded, setLoaded] = useState(false)
   const [isBadZipCode, setIsBadZipCode] = useState(false)
   const [locationName, setLocationName] = useState(null)
-
+  const [errorMessage, setErrorMessage] = useState(null)
+ 
   useEffect(() => {  
     (async () => {
       setLoaded(false)
@@ -39,19 +41,29 @@ function App() {
         setLocationName(location.name) 
       }
       catch (err) {
-        setIsBadZipCode(true)
-        setLoaded(true)
-        setShowLocationModal(true)
-        console.log(err)     
+        if (err.response) {
+          if (err.response.status === 400) {
+            setIsBadZipCode(true)
+            setLoaded(true)
+            setShowLocationModal(true)              
+          } else {
+            setErrorMessage(err.response.data)      
+          }         
+        }
       }                            
     })()
   }
   ,[userZipCode])
 
   const handleNewZipCode = (formZipCode) => {  
-    setZipCode(formZipCode)
-    setUserZipCode(formZipCode)
-    setShowLocationModal(false)
+    if (formZipCode) {
+      setZipCode(formZipCode)
+      setUserZipCode(formZipCode)
+      setShowLocationModal(false)
+    } else {
+      setShowLocationModal(false)
+      setIsBadZipCode(false)
+    }
   }
 
   const handleBadZipCode = (formZipCode) => {   
@@ -62,8 +74,9 @@ function App() {
   const handleLocationButtonClick = () => {
     setShowLocationModal(true)  
   }
-
-  if (loaded && temperature && weatherCode && time && zipcode) {
+  if (errorMessage) {
+    return <ErrorMessage errorMessage={errorMessage} />
+  } else if (loaded && temperature && weatherCode && time && zipcode) {
       return <div style={{
       backgroundColor: '#D011FF',
       backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' %3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23FF77CF'/%3E%3Cstop offset='1' stop-color='%23F3FF78'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='12' height='12' patternUnits='userSpaceOnUse'%3E%3Ccircle fill='%23D011FF' cx='6' cy='6' r='6'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23a)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23b)' fill-opacity='0.08'/%3E%3C/svg%3E")`,
