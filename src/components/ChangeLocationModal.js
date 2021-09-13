@@ -4,9 +4,10 @@ import React, {useState} from "react";
 Modal.setAppElement('#root');
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default function ({ show, prevZipCode, handleNewZipCode, handleBadZipCode, isBadZipCode }) {
+export default function ({ show, setShow, prevZipCode, handleNewZipCode, handleBadZipCode, isBadZipCode }) {
     const [newZipCode, setNewZipCode] = useState(prevZipCode)
     return <Modal
+        id='changeLocationModal'
         isOpen={show}
         onAfterOpen={() => { } }
         onRequestClose={() => { } }
@@ -32,14 +33,19 @@ export default function ({ show, prevZipCode, handleNewZipCode, handleBadZipCode
         }}>
             {isBadZipCode === true ? "Unknown ZipCode - Try Again" : 'Type in a ZipCode!'}
         </h2>
-        <form onSubmit={(e) => {
+        <form id='changeLocationForm'
+            onSubmit={(e) => {
             e.preventDefault()
             handleNewZipCode(newZipCode)
         } }>
             <input autoFocus
+                id='newZipCode'
                 onChange={(e) => {
                     setNewZipCode(e.target.value)
-                } }
+                }}
+                onBlur={(e) => {
+                    setShow(false)
+                }}
                 value={newZipCode}
                 style={{
                     fontFamily: 'Patrick Hand',

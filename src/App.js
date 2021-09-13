@@ -78,11 +78,11 @@ function App() {
     return <ErrorMessage errorMessage={errorMessage} />
   } else if (loaded && temperature && weatherCode && time && zipcode) {
       return <div style={{
-      backgroundColor: '#D011FF',
-      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' %3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23FF77CF'/%3E%3Cstop offset='1' stop-color='%23F3FF78'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='12' height='12' patternUnits='userSpaceOnUse'%3E%3Ccircle fill='%23D011FF' cx='6' cy='6' r='6'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23a)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23b)' fill-opacity='0.08'/%3E%3C/svg%3E")`,
-      backgroundAttachment: 'fixed'}}>
+      backgroundColor: 'deepskyblue'
+      }}>
                 <ChangeLocationModal 
                     show={showLocationModal || isBadZipCode} 
+                    setShow={(val) => setShowLocationModal(val)}
                     zipcode={zipcode}
                     isBadZipCode={isBadZipCode}
                     handleNewZipCode={handleNewZipCode}
