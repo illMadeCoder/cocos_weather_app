@@ -25,7 +25,7 @@ export default ({temperature, time, weatherCode}) =>
     } else {
       scene = 'warm'
     }     
-    if ((hour >= 8 && PMAM === 'PM')      
+    if ((hour >= 8 && hour != 12 && PMAM === 'PM')      
     || (hour < 6 && PMAM === 'AM')) {
       icon = 'late'
     } else {
