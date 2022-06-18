@@ -25,7 +25,7 @@ export default ({temperature, time, weatherCode}) =>
     } else {
       scene = 'warm'
     }     
-    if ((hour >= 8 && PMAM === 'PM')      
+    if ((hour >= 8 && hour != 12 && PMAM === 'PM')      
     || (hour < 6 && PMAM === 'AM')) {
       icon = 'late'
     } else {
@@ -91,8 +91,7 @@ return <div
            style={{backgroundColor:'pink',
                    backgroundPosition:'center',
                    backgroundSize:'cover',
-                   width:'25%',
-                   height:'8%',
+                   width:'25%',                   
                    marginLeft:'auto',
                    marginRight:'2%',
                    marginTop:'2%',
@@ -102,8 +101,7 @@ return <div
                    textAlign:'center',
                    fontWeight:'bold',                  
                    paddingLeft:'1%',
-                   paddingRight:'1%',
-                   paddingBottom:'9%'
+                   paddingRight:'1%',                   
                    }}>
           {`${time}`}
         </Textfit>
